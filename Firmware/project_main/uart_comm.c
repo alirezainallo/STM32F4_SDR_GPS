@@ -4,6 +4,7 @@
 #include "uart_comm.h"
 #include "stm32f4xx_rcc.h"
 #include "stdio.h"
+#include "stdarg.h"
 
 
 /* Private typedef -----------------------------------------------------------*/
@@ -213,6 +214,34 @@ uint8_t uart_prim_is_busy(void)
 uint8_t uart_second_is_busy(void)
 {
   return (SECONDARY_DMA_TX_STREAM->NDTR > 0) ? 1 : 0;
+}
+
+int uart_prim_printf(const char *format, ...){
+  static char buffer[TxQueue_BUFFER_LEN] = {0};
+  // Initialize the variable argument list
+  va_list args;
+  va_start(args, format);
+  // Use vsprintf to format the rest of the string
+  int formatted_length = vsprintf(buffer, format, args);
+  // Cleanup the variable argument list
+  va_end(args);
+  
+  uart_prim_dma_send_data((uint8_t*)buffer, (uint32_t)formatted_length);
+  return formatted_length;
+}
+
+int uart_second_printf(const char *format, ...){
+  static char buffer[TxQueue_BUFFER_LEN] = {0};
+  // Initialize the variable argument list
+  va_list args;
+  va_start(args, format);
+  // Use vsprintf to format the rest of the string
+  int formatted_length = vsprintf(buffer, format, args);
+  // Cleanup the variable argument list
+  va_end(args);
+  
+  uart_second_dma_send_data((uint8_t*)buffer, (uint32_t)formatted_length);
+  return formatted_length;
 }
 
 void PRIMARY_UART_IRQ_HANDLER(void)

@@ -28,6 +28,8 @@
   #include "solving.h"
 #endif
 
+
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -79,6 +81,10 @@ int main(void)
   
   uart_init();
   keys_init();
+  uart_prim_printf("Starting...\n");
+  uart_prim_printf("Starting...\n");
+  uart_prim_printf("Starting...\n");
+  uart_prim_printf("Starting...\n");
   signal_capture_init();
   
   signal_capture_need_data_copy();
