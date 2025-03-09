@@ -55,6 +55,7 @@ int main(void)
   
   //solve_test();
   
+  // https://in-the-sky.org/satmap_worldmap.php
   // user can enter known doppler frequency to make acquisition much faster
   gps_channels[0].prn = 5;
   gps_channels[0].acq_data.given_freq_offset_hz = 900;
