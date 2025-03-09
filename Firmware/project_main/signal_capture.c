@@ -81,19 +81,70 @@ void SPI_DMA_IRQ_HANDLER(void)
     LED4_GPIO_PORT->ODR &= ~LED4_PIN;
 }
 
+typedef enum
+{
+  GPIO_PIN_RESET = 0,
+  GPIO_PIN_SET
+}GPIO_PinState;
+void HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, uint16_t pin, GPIO_PinState PinState){
+  if (PinState == GPIO_PIN_SET){
+    GPIOx->ODR |= pin;
+  }else{
+    GPIOx->ODR &= ~pin;
+  }
+}
 void signal_capture_init(void)
 {
   init_dma();
   init_spi();
   
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
+  
   GPIO_InitTypeDef GPIO_InitStruct;
-  GPIO_InitStruct.GPIO_Pin =  LED4_PIN;
+  GPIO_InitStruct.GPIO_Pin =  LED4_PIN | LED_1_Pin | LED_2_Pin;
   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
   GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStruct.GPIO_Speed = GPIO_Speed_25MHz;
   GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
-  GPIO_Init(LED4_GPIO_PORT, &GPIO_InitStruct);
+  GPIO_Init(LED_1_GPIO_Port, &GPIO_InitStruct);
+  
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+  
+  // GPIO_InitTypeDef GPIO_InitStruct;
+  GPIO_InitStruct.GPIO_Pin =  MAX2762_CS_Pin | MAX2762_SCLK_Pin | MAX2762_DATA_Pin;
+  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
+  GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStruct.GPIO_Speed = GPIO_Speed_25MHz;
+  GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+  GPIO_Init(MAX2762_CS_GPIO_Port, &GPIO_InitStruct);
+  
+  
+  
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
+  // GPIO_InitTypeDef GPIO_InitStruct;
+  GPIO_InitStruct.GPIO_Pin =  MAX2762_ANTFLAG_Pin|MAX2762_LD_Pin;;
+  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
+  GPIO_InitStruct.GPIO_Speed = GPIO_Speed_25MHz;
+  GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;
+  GPIO_Init(MAX2762_ANTFLAG_GPIO_Port, &GPIO_InitStruct);
+  
+  GPIO_InitStruct.GPIO_Pin =  MAX2762_SHDN__Pin|MAX2762_IDLE__Pin|MAX2762_PGM_Pin;;
+  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
+  GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStruct.GPIO_Speed = GPIO_Speed_25MHz;
+  GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+  GPIO_Init(MAX2762_SHDN__GPIO_Port, &GPIO_InitStruct);
+  
+  HAL_GPIO_WritePin(MAX2762_SHDN__GPIO_Port, MAX2762_SHDN__Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(MAX2762_IDLE__GPIO_Port, MAX2762_IDLE__Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(MAX2762_LD_GPIO_Port, MAX2762_LD_Pin, GPIO_PIN_RESET);
+  dwt_delay(1000*1000); // PGM RISING EDGE ANYTIME AFTER VCC_ HAS REACHED 90% OF ITS NOMINAL VALUE
+  HAL_GPIO_WritePin(MAX2762_PGM_GPIO_Port,  MAX2762_PGM_Pin,  GPIO_PIN_SET);
+  // mode 2
+  HAL_GPIO_WritePin(MAX2762_SCLK_GPIO_Port, MAX2762_SCLK_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(MAX2762_DATA_GPIO_Port, MAX2762_DATA_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(MAX2762_CS_GPIO_Port,   MAX2762_CS_Pin,   GPIO_PIN_RESET);
+  dwt_delay(1000*1000);
 }
 
 // Must be called periodically

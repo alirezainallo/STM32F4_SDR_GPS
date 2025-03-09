@@ -76,22 +76,22 @@
 
 //PRIMARY UART - sending RTCM
 
-#define PRIMARY_UART_NAME       USART2
-#define PRIMARY_UART_AF_NAME    GPIO_AF_USART2
+#define PRIMARY_UART_NAME       USART1
+#define PRIMARY_UART_AF_NAME    GPIO_AF_USART1
 #define PRIMARY_UART_BAUDRATE   115200
 
 #define PRIMARY_UART_GPIO_CLK   RCC_AHB1Periph_GPIOA
-#define PRIMARY_UART_CLK        RCC_APB1Periph_USART2
+#define PRIMARY_UART_CLK        RCC_APB2Periph_USART1
 
-#define PRIMARY_UART_RX_PIN     GPIO_Pin_3
-#define PRIMARY_UART_RX_PIN_SRC GPIO_PinSource3
+#define PRIMARY_UART_RX_PIN     GPIO_Pin_10
+#define PRIMARY_UART_RX_PIN_SRC GPIO_PinSource10
 #define PRIMARY_UART_RX_GPIO    GPIOA
 
-#define PRIMARY_UART_TX_PIN     GPIO_Pin_2
-#define PRIMARY_UART_TX_PIN_SRC GPIO_PinSource2
+#define PRIMARY_UART_TX_PIN     GPIO_Pin_9
+#define PRIMARY_UART_TX_PIN_SRC GPIO_PinSource9
 #define PRIMARY_UART_TX_GPIO    GPIOA
 
-#define PRIMARY_UART_IRQ_HANDLER      USART2_IRQHandler
+#define PRIMARY_UART_IRQ_HANDLER      USART1_IRQHandler
 
 #define PRIMARY_DMA_RCC         RCC_AHB1Periph_DMA1
 #define PRIMARY_DMA_TX_STREAM   DMA1_Stream6
@@ -125,11 +125,33 @@
 
 //--------------------------
 //Debug only
-#define LED4_PIN                GPIO_Pin_12
-#define LED4_GPIO_PORT          GPIOD
+#define LED4_PIN                GPIO_Pin_7
+#define LED4_GPIO_PORT          GPIOB
 
 #define BUTTON1_PIN             GPIO_Pin_0
 #define BUTTON1_GPIO            GPIOA
+
+
+#define MAX2762_CS_Pin GPIO_Pin_4
+#define MAX2762_CS_GPIO_Port GPIOA
+#define MAX2762_SCLK_Pin GPIO_Pin_5
+#define MAX2762_SCLK_GPIO_Port GPIOA
+#define MAX2762_DATA_Pin GPIO_Pin_7
+#define MAX2762_DATA_GPIO_Port GPIOA
+#define MAX2762_ANTFLAG_Pin GPIO_Pin_0
+#define MAX2762_ANTFLAG_GPIO_Port GPIOD
+#define MAX2762_LD_Pin GPIO_Pin_1
+#define MAX2762_LD_GPIO_Port GPIOD
+#define MAX2762_SHDN__Pin GPIO_Pin_2
+#define MAX2762_SHDN__GPIO_Port GPIOD
+#define MAX2762_IDLE__Pin GPIO_Pin_3
+#define MAX2762_IDLE__GPIO_Port GPIOD
+#define MAX2762_PGM_Pin GPIO_Pin_4
+#define MAX2762_PGM_GPIO_Port GPIOD
+#define LED_2_Pin GPIO_Pin_6
+#define LED_2_GPIO_Port GPIOB
+#define LED_1_Pin GPIO_Pin_7
+#define LED_1_GPIO_Port GPIOB
 
 
 #endif //_CONFIG_H
